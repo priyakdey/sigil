@@ -20,7 +20,9 @@ package com.priyakdey.sigil.core;
 public class Hex {
 
     /**
-     * Converts a byte array to a hexadecimal string using uppercase letters.
+     * Converts a byte array into an uppercase hexadecimal string representation.
+     *  Each byte is converted to two hex digits, with leading zeros preserved.
+     *  For example, {@code new byte[]{0x0A, 0x1F}} becomes {@code "0A1F"}.
      *
      * @param bytes the byte array to convert
      * @return a hex string (e.g., {@code "DEADBEEF"})
@@ -63,6 +65,19 @@ public class Hex {
             bytes[i] = (byte) ((highNibble << 4) | lowNibble);
         }
         return bytes;
+    }
+
+    /**
+     * Returns a hexadecimal string representation of the byte array prefixed with {@code 0x}.
+     * Delegates to {@link #toHexString(byte[])}.
+     *
+     * @param bytes the byte array to convert
+     * @return a hex string in the format {@code 0x...}
+     *
+     * @throws IllegalArgumentException if {@code bytes} is {@code null}
+     */
+    public static String toString(byte[] bytes) {
+        return "0x" + toHexString(bytes);
     }
 
 }

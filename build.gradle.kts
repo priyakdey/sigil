@@ -51,7 +51,7 @@ subprojects {
 
         testLogging {
             lifecycle {
-                events = mutableSetOf(TestLogEvent.STARTED, TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+                events = mutableSetOf(TestLogEvent.SKIPPED, TestLogEvent.FAILED)
 
                 showExceptions = true
                 showCauses = true
