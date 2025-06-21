@@ -10,6 +10,7 @@ plugins {
     java
 
     id("jacoco")
+    id("jacoco-report-aggregation")
     id("com.github.spotbugs") version "6.2.0"
 }
 
@@ -17,6 +18,11 @@ allprojects {
     repositories {
         mavenCentral()
     }
+}
+
+dependencies {
+    jacocoAggregation(project(":core"))
+    jacocoAggregation(project(":jwa"))
 }
 
 subprojects {
@@ -204,7 +210,7 @@ subprojects {
 
         reports {
             html.required.set(true)
-            xml.required.set(false)
+            xml.required.set(true)
             csv.required.set(false)
         }
     }
@@ -216,5 +222,16 @@ subprojects {
     spotbugs {
         toolVersion = "4.9.3"
     }
+}
 
+reporting {
+    reports {
+        val junit by creating(JacocoCoverageReport::class) {
+            testSuiteName = "test"
+        }
+    }
+}
+
+tasks.check {
+    dependsOn(tasks.named<JacocoReport>("testCodeCoverageReport"))
 }
