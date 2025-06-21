@@ -33,7 +33,7 @@ jobs:
       - name: Run SpotBugs
         run: ./gradlew spotbugsMain
 
-      - name: Upload coverage to Codecov
+      - name: Upload test coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
           files: build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
