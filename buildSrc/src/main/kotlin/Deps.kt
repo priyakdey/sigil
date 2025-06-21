@@ -8,4 +8,6 @@ object Deps {
 
     const val JACKSON_CORE = "com.fasterxml.jackson.core:jackson-databind:${Versions.JACKSON}"
     const val JACKSON_ANNOTATIONS = "com.fasterxml.jackson.core:jackson-annotations:${Versions.JACKSON}"
+
+    const val BOUNCY_CASTLE = "org.bouncycastle:bcprov-jdk18on:${Versions.BOUNCY_CASTLE}"
 }

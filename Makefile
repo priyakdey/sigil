@@ -1,4 +1,4 @@
-.PHONY: test
+.PHONY: test bug clean
 
 test:
 	./gradlew clean test
@@ -6,3 +6,5 @@ test:
 bug:
 	./gradlew spotBugMain
 
+clean:
+	./gradlew clean

@@ -287,4 +287,90 @@ public class Bytes {
 
         return buffer;
     }
+
+    /**
+     * Appends one byte to the input byte array.
+     *
+     * @param src source array
+     * @param b   byte to append
+     * @return new byte array containing src followed by byte
+     * @throws IllegalArgumentException if {@code src} or {@code append} is {@code null}
+     */
+    public static byte[] append(byte[] src, byte b) {
+        if (src == null) {
+            throw new IllegalArgumentException("Source and append arrays cannot be null");
+        }
+
+        byte[] buffer = new byte[src.length + 1];
+        System.arraycopy(src, 0, buffer, 0, src.length);
+        buffer[buffer.length - 1] = b;
+
+        return buffer;
+    }
+
+    /**
+     * Appends one byte array to another.
+     *
+     * @param src    source array
+     * @param append array to append
+     * @return new byte array containing src followed by append
+     * @throws IllegalArgumentException if {@code src} or {@code append} is {@code null}
+     */
+    public static byte[] append(byte[] src, byte[] append) {
+        if (src == null || append == null) {
+            throw new IllegalArgumentException("Source and append arrays cannot be null");
+        }
+
+        byte[] buffer = new byte[src.length + append.length];
+        System.arraycopy(src, 0, buffer, 0, src.length);
+        System.arraycopy(append, 0, buffer, src.length, append.length);
+
+        return buffer;
+    }
+
+    /**
+     * Converts an array of integers to a byte array in big-endian order.
+     * Each integer is split into 4 bytes, starting with the most significant byte.
+     *
+     * @param values the array of integers to convert
+     * @return a byte array containing the big-endian representation of the input integers
+     * @throws IllegalArgumentException if the input array is null
+     */
+    public static byte[] intsToBytesBigEndian(int[] values) {
+        if (values == null) {
+            throw new IllegalArgumentException("Input array cannot be null");
+        }
+
+        byte[] result = new byte[values.length * 4];
+        for (int i = 0; i < values.length; i++) {
+            int val = values[i];
+            result[i * 4]     = (byte) ((val >>> 24) & 0xFF);
+            result[i * 4 + 1] = (byte) ((val >>> 16) & 0xFF);
+            result[i * 4 + 2] = (byte) ((val >>> 8) & 0xFF);
+            result[i * 4 + 3] = (byte) (val & 0xFF);
+        }
+        return result;
+    }
+
+
+    /**
+     * Converts a long value to a big-endian byte array of the given size.
+     *
+     * @param value the long value to convert
+     * @param size  number of bytes to use (should be <= 8)
+     * @return big-endian byte array
+     * @throws IllegalArgumentException if {@code size} is not between 1 and 8
+     */
+    public static byte[] toBigEndianBytes(long value, int size) {
+        if (size < 1 || size > 8) {
+            throw new IllegalArgumentException("Size must be between 1 and 8");
+        }
+
+        byte[] buffer = new byte[size];
+        for (int i = 0; i < size; i++) {
+            buffer[size - i - 1] = (byte) ((value >> ((i) * 8)) & 0xFF);
+        }
+
+        return buffer;
+    }
 }

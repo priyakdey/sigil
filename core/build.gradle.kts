@@ -3,5 +3,5 @@ plugins {
 }
 
 dependencies {
-    implementation(Deps.JACKSON_CORE)
+    testImplementation(Deps.BOUNCY_CASTLE)
 }

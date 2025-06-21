@@ -76,7 +76,7 @@ public class Hex {
      *
      * @throws IllegalArgumentException if {@code bytes} is {@code null}
      */
-    public static String toString(byte[] bytes) {
+    public static String repr(byte[] bytes) {
         return "0x" + toHexString(bytes);
     }
 
