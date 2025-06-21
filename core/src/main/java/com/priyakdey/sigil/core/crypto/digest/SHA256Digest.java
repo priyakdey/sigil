@@ -81,10 +81,10 @@ public final class SHA256Digest implements Digest {
             for (int t = 0; t < 16; t++) {
                 int i = block * 64 + t * 4;
                 // @formatter:off
-                word[t] =  ((bytes[i]     & 0xFF) << (3 * 8)) |
-                        ((bytes[i + 1] & 0xFF) << (2 * 8)) |
-                        ((bytes[i + 2] & 0xFF) << (1 * 8)) |
-                        ((bytes[i + 3] & 0xFF) << (0 * 8));
+                word[t] = ((bytes[i + 0] & 0xFF) << (3 * 8)) |
+                          ((bytes[i + 1] & 0xFF) << (2 * 8)) |
+                          ((bytes[i + 2] & 0xFF) << (1 * 8)) |
+                          ((bytes[i + 3] & 0xFF) << (0 * 8));
                 // @formatter:on
             }
 
