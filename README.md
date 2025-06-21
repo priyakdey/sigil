@@ -8,6 +8,8 @@ It supports secure signing, encryption, key handling and encoding/decoding of JW
 > This is an educational and unfinished project.
 > Use some industry standard and well known libs for production like auth0
 
+[![codecov](https://codecov.io/gh/priyakdey/sigil/branch/main/graph/badge.svg?token=tXyiA4fM9R)](https://codecov.io/gh/priyakdey/sigil)
+
 ## Supported Standards
 
 | Component | Description                                             |
