@@ -34,7 +34,7 @@ jobs:
         run: ./gradlew spotbugsMain
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           files: build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml
           token: ${{ secrets.CODECOV_TOKEN }}
