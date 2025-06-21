@@ -10,18 +10,18 @@ It supports secure signing, encryption, key handling and encoding/decoding of JW
 
 ## Supported Standards
 
-| Component | Description |
-|----------|-------------|
-| **JWT**  | JSON Web Token – structured claims container |
-| **JWS**  | JSON Web Signature – signing & verification |
-| **JWE**  | JSON Web Encryption – encryption & decryption |
-| **JWA**  | JSON Web Algorithms – signature & encryption algorithms |
-| **JWK**  | JSON Web Key – public/private key representation |
-| **JOSE** | JSON Object Signing and Encryption – combined framework |
+| Component | Description                                             |
+|:---------:|:--------------------------------------------------------|
+|  **JWT**  | JSON Web Token – structured claims container            |
+|  **JWS**  | JSON Web Signature – signing & verification             |
+|  **JWE**  | JSON Web Encryption – encryption & decryption           |
+|  **JWA**  | JSON Web Algorithms – signature & encryption algorithms |
+|  **JWK**  | JSON Web Key – public/private key representation        |
+| **JOSE**  | JSON Object Signing and Encryption – combined framework |
 
 ## LICENSE
 
-All code in this repository is published under MIT LICENSE, a copy of which can 
+All code in this repository is published under MIT LICENSE, a copy of which can
 be found [here](./LICENSE)
 
 

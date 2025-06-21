@@ -7,3 +7,4 @@
 
 rootProject.name = "sigil"
 include("core")
+include("jwa")

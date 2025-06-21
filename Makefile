@@ -1,10 +1,16 @@
 .PHONY: test bug clean
 
-test:
+test: clean
 	./gradlew clean test
 
-bug:
+bug: clean
 	./gradlew spotBugMain
 
 clean:
 	./gradlew clean
+
+
+docs: clean
+	./gradlew javadoc
+
+

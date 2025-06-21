@@ -6,7 +6,6 @@ package com.priyakdey.sigil.core;
  * This implementation follows the Base64URL encoding rules as defined in
  * <a href="https://datatracker.ietf.org/doc/html/rfc4648#section-5">RFC 4648 §5</a>,
  * commonly used in JWT (JSON Web Tokens) and JOSE standards.
- * <p>
  * Key properties:
  * <ul>
  *     <li>Uses URL-safe character set: {@code A-Z, a-z, 0-9, '-', '_'}</li>
@@ -32,6 +31,9 @@ public class Base64Url {
     };
 
 
+    private Base64Url() {
+    }
+
     /**
      * Encodes a byte array into an unpadded Base64URL string.
      *
@@ -51,9 +53,9 @@ public class Base64Url {
             int b1 = input[cursor + 1] & 0xFF;
             int b2 = input[cursor + 2] & 0xFF;
 
-            int first  = b0 >> 2;
+            int first = b0 >> 2;
             int second = ((b0 & 0x3) << 4) | ((b1 & 0xF0) >> 4);
-            int third  = ((b1 & 0xF) << 2) | ((b2 & 0xC0) >> 6);
+            int third = ((b1 & 0xF) << 2) | ((b2 & 0xC0) >> 6);
             int fourth = b2 & 0x3F;
 
             buffer[outputCursor++] = BASE64_TABLE[first];
@@ -68,7 +70,7 @@ public class Base64Url {
             int b0 = input[cursor] & 0xFF;
             int b1 = input[cursor + 1] & 0xFF;
 
-            int first  = b0 >> 2;
+            int first = b0 >> 2;
             int second = ((b0 & 0x3) << 4) | (b1 >> 4);
             int third = (b1 & 0xF) << 2;
 
@@ -78,7 +80,7 @@ public class Base64Url {
         } else if (length - cursor == 1) {
             int b0 = input[cursor] & 0xFF;
 
-            int first  = b0 >> 2;
+            int first = b0 >> 2;
             int second = (b0 & 0x3) << 4;
 
             buffer[outputCursor++] = BASE64_TABLE[first];

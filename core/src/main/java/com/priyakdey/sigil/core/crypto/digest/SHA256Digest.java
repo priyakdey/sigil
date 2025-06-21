@@ -3,10 +3,38 @@ package com.priyakdey.sigil.core.crypto.digest;
 import com.priyakdey.sigil.core.Bytes;
 
 /**
+ * Implementation of the SHA-256 cryptographic hash function.
+ *
+ * <p>
+ * This class follows the Secure Hash Algorithm 256-bit variant as specified in the
+ * <a href="https://csrc.nist.gov/publications/detail/fips/180/4/final">FIPS PUB 180-4</a>
+ * and implemented in accordance with the structure outlined in
+ * <a href="https://en.wikipedia.org/wiki/SHA-2">Wikipedia: SHA-2</a>.
+ * </p>
+ *
+ * <p>
+ * The digest is computed using a block size of 512 bits (64 bytes), where the message
+ * is preprocessed with padding and its length is appended before chunk-wise processing.
+ * Each chunk updates the internal hash state using bitwise operations, rotations, and constants.
+ * </p>
+ *
+ * <p>
+ * Constants {@code K} are derived from the fractional parts of the cube roots of the first 64 prime numbers,
+ * as defined in the SHA-2 specification.
+ * </p>
+ *
  * @author Priyak Dey
+ * @see Digest
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc6234.html">RFC 6234: US Secure Hash Algorithms (SHA and SHA-based HMAC and HKDF)</a>
+ * @see <a href="https://www.rfc-editor.org/rfc/rfc4634.html">RFC 4634: SHA and HMAC-SHA Implementations</a>
+ * @see <a href="https://csrc.nist.gov/publications/detail/fips/180/4/final">FIPS PUB 180-4: Secure Hash Standard (SHS)</a>
+ * @see <a href="https://en.wikipedia.org/wiki/SHA-2">Wikipedia: SHA-2</a>
  */
 public final class SHA256Digest implements Digest {
 
+    /**
+     * SHA-256 round constants derived from the cube roots of the first 64 primes.
+     */
     private static final int[] K = {
             0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
             0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
@@ -18,6 +46,19 @@ public final class SHA256Digest implements Digest {
             0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
     };
 
+    /**
+     * Default constructor for SHA256Digest.
+     */
+    public SHA256Digest() {
+    }
+
+    /**
+     * Computes the SHA-256 digest of the provided input.
+     *
+     * @param message the input byte array
+     * @return a 32-byte hash digest
+     * @throws IllegalArgumentException if the input is {@code null}
+     */
     @Override
     public byte[] digest(byte[] message) {
         byte[] bytes = padMessage(message);
@@ -100,7 +141,16 @@ public final class SHA256Digest implements Digest {
         return Bytes.intsToBytesBigEndian(hash);
     }
 
-
+    /**
+     * Pads the input message according to SHA-256 specifications.
+     * <p>
+     * The padding includes a '1' bit, followed by zero bits, and ending with the
+     * original message length encoded as a 64-bit big-endian integer.
+     * </p>
+     *
+     * @param message the input message
+     * @return the padded message ready for processing
+     */
     private byte[] padMessage(byte[] message) {
         int messageLength = message.length;
         long messageLengthBits = ((long) messageLength) * 8;

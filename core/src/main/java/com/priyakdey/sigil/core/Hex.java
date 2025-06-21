@@ -5,7 +5,6 @@ package com.priyakdey.sigil.core;
  * <p>
  * Provides methods to convert between byte arrays and hexadecimal strings.
  * All methods are stateless and thread-safe.
- * </p>
  *
  * <p>Example usage:
  * <pre>
@@ -13,16 +12,18 @@ package com.priyakdey.sigil.core;
  *     String hex = Hex.toHexString(data); // "DEADBEEF"
  *     byte[] parsed = Hex.fromHexString(hex); // { -34, -83, -66, -17 }
  * </pre>
- * </p>
  *
  * @author Priyak Dey
  */
 public class Hex {
 
+    private Hex() {
+    }
+
     /**
      * Converts a byte array into an uppercase hexadecimal string representation.
-     *  Each byte is converted to two hex digits, with leading zeros preserved.
-     *  For example, {@code new byte[]{0x0A, 0x1F}} becomes {@code "0A1F"}.
+     * Each byte is converted to two hex digits, with leading zeros preserved.
+     * For example, {@code new byte[]{0x0A, 0x1F}} becomes {@code "0A1F"}.
      *
      * @param bytes the byte array to convert
      * @return a hex string (e.g., {@code "DEADBEEF"})
@@ -73,7 +74,6 @@ public class Hex {
      *
      * @param bytes the byte array to convert
      * @return a hex string in the format {@code 0x...}
-     *
      * @throws IllegalArgumentException if {@code bytes} is {@code null}
      */
     public static String repr(byte[] bytes) {
