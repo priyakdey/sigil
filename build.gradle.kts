@@ -55,148 +55,148 @@ subprojects {
     tasks.withType<Test> {
         useJUnitPlatform()
 
-        testLogging {
-            lifecycle {
-                events = mutableSetOf(TestLogEvent.SKIPPED, TestLogEvent.FAILED)
-
-                showExceptions = true
-                showCauses = true
-                showStackTraces = true
-
-                info.events = lifecycle.events
-                info.exceptionFormat = lifecycle.exceptionFormat
-            }
-        }
-
-        fun center(s: String?, maxWidth: Int): String {
-            val str = s ?: ""
-            if (str.length >= maxWidth) {
-                return str.substring(0, maxWidth - 3) + "..."
-            }
-
-            val leftPadding = (maxWidth - str.length) / 2
-            return str.padStart(str.length + leftPadding).padEnd(maxWidth)
-        }
-
-        // global state to store the test results
-        val successTests: MutableList<TestDescriptor> = mutableListOf()
-        val skippedTests: MutableList<TestDescriptor> = mutableListOf()
-        val failedTests: MutableList<TestDescriptor> = mutableListOf()
-
-        // ansi color codes
-        val RESET = "\u001B[0m"
-        val RED = "\u001B[31m"
-        val GREEN = "\u001B[32m"
-        val YELLOW = "\u001B[33m"
-
-        // constants for pprint formatter
-        val CLASSNAME_COL_WIDTH = 40
-        val TESTNAME_COL_WIDTH = 80
-        val STATUS_COL_WIDTH = 10
-
-        val TABLE_BORDER =
-            "+" + ("-".repeat(CLASSNAME_COL_WIDTH)) + "+" + ("-".repeat(TESTNAME_COL_WIDTH)) + "+" + ("-".repeat(
-                STATUS_COL_WIDTH
-            )) + "+"
-        val TABLE_HEADER =
-            "|${center("Class Name", CLASSNAME_COL_WIDTH)}|${center("Test Name", TESTNAME_COL_WIDTH)}|${center("Status", STATUS_COL_WIDTH)}|"
-
-
-
-        addTestListener(object : TestListener {
-            override fun beforeSuite(suite: TestDescriptor?) {}
-
-            override fun beforeTest(testDescriptor: TestDescriptor?) {}
-
-            override fun afterTest(testDescriptor: TestDescriptor?, result: TestResult?) {
-                when (result?.resultType) {
-                    TestResult.ResultType.SUCCESS -> testDescriptor?.let { successTests.add(it) }
-                    TestResult.ResultType.SKIPPED -> testDescriptor?.let { skippedTests.add(it) }
-                    TestResult.ResultType.FAILURE -> testDescriptor?.let { failedTests.add(it) }
-                    null -> assert(true) { "Unreachable" }
-                }
-            }
-
-            override fun afterSuite(suite: TestDescriptor?, result: TestResult?) {
-                if (suite?.parent == null) {
-                    logger.lifecycle("\n############################### Test Run Summary ###############################\n")
-                    logTestResultsTable()
-                    logStats()
-                    logger.lifecycle("\n################################################################################\n")
-                }
-            }
-
-            private fun logTestResultsTable() {
-                logger.lifecycle(TABLE_BORDER)
-                logger.lifecycle(TABLE_HEADER)
-                logger.lifecycle(TABLE_BORDER)
-
-                successTests.forEach {
-                    logTestResult(it, "SUCCESS", GREEN)
-                }
-
-                skippedTests.forEach {
-                    logTestResult(it, "SKIPPED", YELLOW)
-                }
-
-                failedTests.forEach {
-                    logTestResult(it, "FAILED", RED)
-                }
-
-                logger.lifecycle(TABLE_BORDER)
-            }
-
-            private fun logTestResult(testDescriptor: TestDescriptor?, result: String?, color: String) {
-                // Extract class name from the test descriptor
-                val className = extractClassName(testDescriptor)
-                val testName = testDescriptor?.displayName ?: "Unknown Test"
-
-                logger.lifecycle(
-                    "|${center(className, CLASSNAME_COL_WIDTH)}|${
-                        center(
-                            testName,
-                            TESTNAME_COL_WIDTH
-                        )
-                    }|${color}${center(result, STATUS_COL_WIDTH)}$RESET|"
-                )
-            }
-
-            private fun extractClassName(testDescriptor: TestDescriptor?): String {
-                if (testDescriptor == null) return "Unknown"
-
-                // Try to get the class name from the test descriptor
-                val className = testDescriptor.className
-                if (className != null) {
-                    // Return simple class name (without package)
-                    return className.substringAfterLast(".")
-                }
-
-                // Fallback: try to extract from parent
-                val parentName = testDescriptor.parent?.displayName
-                if (parentName != null && parentName.contains(".")) {
-                    return parentName.substringAfterLast(".")
-                }
-
-                return parentName ?: "Unknown"
-            }
-
-            private fun logStats() {
-                val successCount = successTests.size
-                val skippedCount = skippedTests.size
-                val failedCount = failedTests.size
-                val totalCount = successCount + skippedCount + failedCount
-
-                logger.lifecycle("\nTest run statistics")
-                logger.lifecycle("------------------------")
-
-                logger.lifecycle("Total  : $totalCount")
-                logger.lifecycle("Success: $successCount  (${"%.2f".format((successCount.toDouble() / totalCount) * 100)}%)")
-                logger.lifecycle("Skipped: $skippedCount  (${"%.2f".format((skippedCount.toDouble() / totalCount) * 100)}%)")
-                logger.lifecycle("Failed : $failedCount  (${"%.2f".format((failedCount.toDouble() / totalCount) * 100)}%)")
-
-                logger.lifecycle("------------------------")
-            }
-        })
+//        testLogging {
+//            lifecycle {
+//                events = mutableSetOf(TestLogEvent.SKIPPED, TestLogEvent.FAILED)
+//
+//                showExceptions = true
+//                showCauses = true
+//                showStackTraces = true
+//
+//                info.events = lifecycle.events
+//                info.exceptionFormat = lifecycle.exceptionFormat
+//            }
+//        }
+//
+//        fun center(s: String?, maxWidth: Int): String {
+//            val str = s ?: ""
+//            if (str.length >= maxWidth) {
+//                return str.substring(0, maxWidth - 3) + "..."
+//            }
+//
+//            val leftPadding = (maxWidth - str.length) / 2
+//            return str.padStart(str.length + leftPadding).padEnd(maxWidth)
+//        }
+//
+//        // global state to store the test results
+//        val successTests: MutableList<TestDescriptor> = mutableListOf()
+//        val skippedTests: MutableList<TestDescriptor> = mutableListOf()
+//        val failedTests: MutableList<TestDescriptor> = mutableListOf()
+//
+//        // ansi color codes
+//        val RESET = "\u001B[0m"
+//        val RED = "\u001B[31m"
+//        val GREEN = "\u001B[32m"
+//        val YELLOW = "\u001B[33m"
+//
+//        // constants for pprint formatter
+//        val CLASSNAME_COL_WIDTH = 40
+//        val TESTNAME_COL_WIDTH = 80
+//        val STATUS_COL_WIDTH = 10
+//
+//        val TABLE_BORDER =
+//            "+" + ("-".repeat(CLASSNAME_COL_WIDTH)) + "+" + ("-".repeat(TESTNAME_COL_WIDTH)) + "+" + ("-".repeat(
+//                STATUS_COL_WIDTH
+//            )) + "+"
+//        val TABLE_HEADER =
+//            "|${center("Class Name", CLASSNAME_COL_WIDTH)}|${center("Test Name", TESTNAME_COL_WIDTH)}|${center("Status", STATUS_COL_WIDTH)}|"
+//
+//
+//
+//        addTestListener(object : TestListener {
+//            override fun beforeSuite(suite: TestDescriptor?) {}
+//
+//            override fun beforeTest(testDescriptor: TestDescriptor?) {}
+//
+//            override fun afterTest(testDescriptor: TestDescriptor?, result: TestResult?) {
+//                when (result?.resultType) {
+//                    TestResult.ResultType.SUCCESS -> testDescriptor?.let { successTests.add(it) }
+//                    TestResult.ResultType.SKIPPED -> testDescriptor?.let { skippedTests.add(it) }
+//                    TestResult.ResultType.FAILURE -> testDescriptor?.let { failedTests.add(it) }
+//                    null -> assert(true) { "Unreachable" }
+//                }
+//            }
+//
+//            override fun afterSuite(suite: TestDescriptor?, result: TestResult?) {
+//                if (suite?.parent == null) {
+//                    logger.lifecycle("\n############################### Test Run Summary ###############################\n")
+//                    logTestResultsTable()
+//                    logStats()
+//                    logger.lifecycle("\n################################################################################\n")
+//                }
+//            }
+//
+//            private fun logTestResultsTable() {
+//                logger.lifecycle(TABLE_BORDER)
+//                logger.lifecycle(TABLE_HEADER)
+//                logger.lifecycle(TABLE_BORDER)
+//
+//                successTests.forEach {
+//                    logTestResult(it, "SUCCESS", GREEN)
+//                }
+//
+//                skippedTests.forEach {
+//                    logTestResult(it, "SKIPPED", YELLOW)
+//                }
+//
+//                failedTests.forEach {
+//                    logTestResult(it, "FAILED", RED)
+//                }
+//
+//                logger.lifecycle(TABLE_BORDER)
+//            }
+//
+//            private fun logTestResult(testDescriptor: TestDescriptor?, result: String?, color: String) {
+//                // Extract class name from the test descriptor
+//                val className = extractClassName(testDescriptor)
+//                val testName = testDescriptor?.displayName ?: "Unknown Test"
+//
+//                logger.lifecycle(
+//                    "|${center(className, CLASSNAME_COL_WIDTH)}|${
+//                        center(
+//                            testName,
+//                            TESTNAME_COL_WIDTH
+//                        )
+//                    }|${color}${center(result, STATUS_COL_WIDTH)}$RESET|"
+//                )
+//            }
+//
+//            private fun extractClassName(testDescriptor: TestDescriptor?): String {
+//                if (testDescriptor == null) return "Unknown"
+//
+//                // Try to get the class name from the test descriptor
+//                val className = testDescriptor.className
+//                if (className != null) {
+//                    // Return simple class name (without package)
+//                    return className.substringAfterLast(".")
+//                }
+//
+//                // Fallback: try to extract from parent
+//                val parentName = testDescriptor.parent?.displayName
+//                if (parentName != null && parentName.contains(".")) {
+//                    return parentName.substringAfterLast(".")
+//                }
+//
+//                return parentName ?: "Unknown"
+//            }
+//
+//            private fun logStats() {
+//                val successCount = successTests.size
+//                val skippedCount = skippedTests.size
+//                val failedCount = failedTests.size
+//                val totalCount = successCount + skippedCount + failedCount
+//
+//                logger.lifecycle("\nTest run statistics")
+//                logger.lifecycle("------------------------")
+//
+//                logger.lifecycle("Total  : $totalCount")
+//                logger.lifecycle("Success: $successCount  (${"%.2f".format((successCount.toDouble() / totalCount) * 100)}%)")
+//                logger.lifecycle("Skipped: $skippedCount  (${"%.2f".format((skippedCount.toDouble() / totalCount) * 100)}%)")
+//                logger.lifecycle("Failed : $failedCount  (${"%.2f".format((failedCount.toDouble() / totalCount) * 100)}%)")
+//
+//                logger.lifecycle("------------------------")
+//            }
+//        })
 
         finalizedBy(tasks.jacocoTestReport)
 
