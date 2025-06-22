@@ -1,7 +1,7 @@
 .PHONY: test bug clean
 
 test: clean
-	./gradlew clean test
+	./gradlew clean test testCodeCoverageReport
 
 bug: clean
 	./gradlew spotBugMain

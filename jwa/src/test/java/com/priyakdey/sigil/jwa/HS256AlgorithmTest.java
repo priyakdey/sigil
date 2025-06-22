@@ -4,10 +4,12 @@ import com.priyakdey.sigil.core.Hex;
 import org.bouncycastle.crypto.macs.HMac;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,11 +27,17 @@ class HS256AlgorithmTest {
         HS256_ALGORITHM_BC = new HMac(digest);
     }
 
+    /**
+     * Provides test data for the HS256 algorithm tests. The test data is based on the
+     * test cases from RFC 2104, which defines HMAC and provides examples for various
+     * input messages and keys, along with their expected signatures.
+     * <a href="https://datatracker.ietf.org/doc/html/rfc4231#section-4.1">RFC 2104 Test Vector</a>
+     * <p>
+     * Skip test case 5 from rfc, since truncation is not supported for jwt, and we don't support either.
+     *
+     * @return stream of arguments for the tests
+     */
     static Stream<Arguments> testData() {
-        // Test data from RFC 2104
-        // Ref: https://datatracker.ietf.org/doc/html/rfc4231#section-4.1
-        // Skip test case 5 from rfc, since truncation is not supported for jwt,
-        // and we don't support either.
         return Stream.of(
                 Arguments.of("4869205468657265", "0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b0b", "b0344c61d8db38535ca8afceaf0bf12b881dc200c9833da726e9376c2e32cff7"),
                 Arguments.of("7768617420646f2079612077616e7420666f72206e6f7468696e673f", "4a656665", "5bdcc146bf60754e6a042426089575c75a003f089d2739839dec58b964ec3843"),
@@ -59,12 +67,18 @@ class HS256AlgorithmTest {
         assertEquals(expectedHexSignature.toUpperCase(), Hex.toHexString(signature), "Signature mismatch");
     }
 
+    @Test
+    @DisplayName("Algorithm Name")
+    void getName() {
+        assertEquals("HS256", HS256_ALGORITHM.getName(), "Algorithm name mismatch");
+    }
+
     /**
      * These tests are run against the same test data as RFC 2104, but expected is from the output
      * of the BC library.
      *
-     * @param hexMsg               Input message in hex format
-     * @param hexKey               Input key in hex format
+     * @param hexMsg Input message in hex format
+     * @param hexKey Input key in hex format
      */
     @ParameterizedTest(name = "sign_test_case_bc_{index}")
     @MethodSource("testData")
@@ -76,6 +90,19 @@ class HS256AlgorithmTest {
         String expectedHexSignature = generateSignUsingBC(message, key);
 
         assertEquals(expectedHexSignature, Hex.toHexString(signature), "Signature mismatch");
+    }
+
+    @Test
+    @DisplayName("HMAC with key == blockSize (64 bytes)")
+    void sign_keyEqualsBlockSize() {
+        // 64 bytes of 0xAB
+        byte[] key = Hex.fromHexString("ab".repeat(64));
+        byte[] message = "sigil".getBytes(StandardCharsets.UTF_8);
+
+        byte[] sig = HS256_ALGORITHM.sign(message, key);
+        String expected = generateSignUsingBC(message, key);
+
+        assertEquals(expected, Hex.toHexString(sig), "Signature mismatch with 64-byte key");
     }
 
     private String generateSignUsingBC(byte[] message, byte[] key) {

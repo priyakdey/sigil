@@ -119,7 +119,7 @@ public final class HS256Algorithm implements HMAC {
             case -1 -> Bytes.rightPad(key, BLOCK_SIZE, (byte) 0x00);
             case 0  -> key;
             case 1  -> Bytes.rightPad(HASH_FN.digest(key), BLOCK_SIZE, (byte) 0x00);
-            default -> throw new IllegalStateException("Unexpected sign value");
+            default -> throw new IllegalStateException("WTF");    // just to satisfy the switch exhaustiveness, will never happen
         };
         // @formatter:on
     }

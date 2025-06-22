@@ -186,6 +186,24 @@ class BytesTest {
     // ================================
 
     @Test
+    @DisplayName("source array is null")
+    void testCopyNullSource() {
+        assertThrows(IllegalArgumentException.class, () -> Bytes.copy(null, new byte[0]));
+    }
+
+    @Test
+    @DisplayName("destination array is null")
+    void testCopyNullDestination() {
+        assertThrows(IllegalArgumentException.class, () -> Bytes.copy(new byte[0], null));
+    }
+
+    @Test
+    @DisplayName("source and destination array not same length")
+    void testCopyDifferentLengths() {
+        assertThrows(IllegalArgumentException.class, () -> Bytes.copy(new byte[]{0x0}, new byte[]{0x0, 0x0}));
+    }
+
+    @Test
     @DisplayName("copy() full array")
     void testCopyFull() {
         byte[] original = {1, 2, 3, 4};
