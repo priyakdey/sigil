@@ -23,7 +23,7 @@ import java.util.Arrays;
  * @author Priyak Dey
  * @see ByteOrder
  */
-public final class ByteBuffer {
+public class ByteBuffer {
 
     private static final int INT_LENGTH_IN_BYTES = 4;
     private static final int LONG_LENGTH_IN_BYTES = 8;
