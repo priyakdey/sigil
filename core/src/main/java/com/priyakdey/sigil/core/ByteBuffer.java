@@ -52,6 +52,63 @@ public class ByteBuffer {
     }
 
     /**
+     * Constructs a new {@code ByteBuffer} by repeating the given byte value
+     * for a specified number of times.
+     *
+     * <p>For example, calling {@code repeat((byte) 0xFF, 4)} will produce
+     * a {@code ByteBuffer} of length 4, with each byte set to {@code 0xFF}.</p>
+     *
+     * @param b      the byte value to be repeated
+     * @param length the number of times to repeat the byte
+     * @return a new {@code ByteBuffer} filled with the specified byte value
+     * @throws IllegalArgumentException if {@code length} is negative
+     */
+    public static ByteBuffer repeat(byte b, int length) {
+        if (length < 0) {
+            throw new IllegalArgumentException("Length cannot be negative");
+        }
+
+        ByteBuffer buffer = new ByteBuffer(length);
+        for (int i = 0; i < length; i++) {
+            buffer.append(b);
+        }
+
+        return buffer;
+    }
+
+    /**
+     * Returns a new {@code ByteBuffer} representing the result of
+     * a byte-wise XOR operation between two buffers of the same length.
+     *
+     * <p>Each resulting byte is calculated as:
+     * <pre>{@code
+     * result[i] = a[i] ^ b[i];
+     * }</pre>
+     *
+     * @param a the first {@code ByteBuffer}
+     * @param b the second {@code ByteBuffer}
+     * @return a new {@code ByteBuffer} where each byte is the XOR of the corresponding bytes from {@code a} and {@code b}
+     * @throws IllegalArgumentException if {@code a} or {@code b} is {@code null} or if the buffers have different lengths
+     */
+    public static ByteBuffer xor(ByteBuffer a, ByteBuffer b) {
+        if (a == null || b == null) {
+            throw new IllegalArgumentException("Buffers cannot be null");
+        }
+
+        if (a.length() != b.length()) {
+            throw new IllegalArgumentException("Buffers must have the same size for XOR operation");
+        }
+
+        int length = a.size;
+        ByteBuffer xor = new ByteBuffer(length);
+        for (int i = 0; i < length; i++) {
+            xor.append((byte) (a.getAsUInt(i) ^ b.getAsUInt(i)));
+        }
+
+        return xor;
+    }
+
+    /**
      * Appends a single byte to the end of the buffer.
      *
      * @param b the byte to append
@@ -77,12 +134,12 @@ public class ByteBuffer {
 
         int bytesLength = bytes.length;
         int newSize = size + bytesLength;
-        if (newSize >= capacity) {
+        if (newSize > capacity) {
             ensureCapacity(newSize);
         }
 
         System.arraycopy(bytes, 0, buffer, size, bytesLength);
-        size += bytesLength;
+        size = newSize;
     }
 
     /**
@@ -207,7 +264,7 @@ public class ByteBuffer {
             return;
         }
 
-        int nextCapacity = Integer.highestOneBit(newLength) << 1;
-        buffer = Arrays.copyOf(buffer, nextCapacity);
+        capacity = Integer.highestOneBit(newLength) << 1;
+        buffer = Arrays.copyOf(buffer, capacity);
     }
 }

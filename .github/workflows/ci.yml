@@ -30,9 +30,6 @@ jobs:
       - name: Run tests with coverage
         run: ./gradlew test testCodeCoverageReport
 
-      - name: Run SpotBugs
-        run: ./gradlew spotbugsMain
-
       - name: Upload test coverage to Codecov
         uses: codecov/codecov-action@v5
         with:
@@ -45,6 +42,9 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 
+      - name: Run SpotBugs
+        run: ./gradlew spotbugsMain
+          
   dependency-submission:
     runs-on: ubuntu-latest
     permissions:

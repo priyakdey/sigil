@@ -28,7 +28,7 @@ class SHA256DigestTest {
     @MethodSource("sha256ShortMsgTestVectors")
     void test_computeDigest_shortMsg(String testName, byte[] message, String expectedAsHex) {
         SHA256Digest hasher = new SHA256Digest();
-        byte[] digest = hasher.computeDigest(message);
+        byte[] digest = hasher.computeDigest(message).return_and_reset();
 
         assertEquals(32, digest.length, "Digest length should be 32 bytes");
 
@@ -42,7 +42,7 @@ class SHA256DigestTest {
     @MethodSource("sha256LongMsgTestVectors")
     void test_computeDigest_longMsg(String testName, byte[] message, String expectedAsHex) {
         SHA256Digest hasher = new SHA256Digest();
-        byte[] digest = hasher.computeDigest(message);
+        byte[] digest = hasher.computeDigest(message).return_and_reset();
 
         assertEquals(32, digest.length, "Digest length should be 32 bytes");
 

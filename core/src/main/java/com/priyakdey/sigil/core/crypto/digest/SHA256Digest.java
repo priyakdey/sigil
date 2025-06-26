@@ -9,22 +9,48 @@ import java.util.Objects;
  * An implementation of the SHA-256 cryptographic hash function as defined in
  * <a href="https://tools.ietf.org/html/rfc6234">RFC 6234</a> (Secure Hash Standard).
  *
- * <p>SHA-256 produces a fixed 256-bit (32-byte) digest for any given input.
- * This class implements the hashing as a one-shot operation and does not yet support streaming input.
- * </p>
+ * <strong>Overview</strong>
+ * <p>SHA-256 produces a fixed 256-bit (32-byte) digest for any given input. This class
+ * operates as a stateful digest calculator:
+ * <ul>
+ *   <li>Each call to {@link #computeDigest(byte[])} processes the input and
+ *       updates the internal hash state.</li>
+ *   <li>To obtain the result and reset the state, call {@link #return_and_reset()}.</li>
+ * </ul>
  *
- * <p><strong>Thread-safety:</strong> This implementation is <em>not thread-safe</em> and should not be reused across multiple digest computations. Create a new instance per call or use a static wrapper if needed.</p>
+ * <strong>Stateful Design</strong>
+ * <p>This class maintains internal state (`hash[]`) across invocations.
+ * As a result:
+ * <ul>
+ *     <li>It is <strong>not thread-safe</strong> and must be used from a single thread at a time,
+ *     unless external synchronization is applied.</li>
+ *     <li>Each digest call must be followed by {@link #return_and_reset()} before reusing the instance
+ *     for another hash computation. Failing to do so will produce incorrect results.</li>
+ * </ul>
  *
- * <p>Example usage:</p>
+ * <strong>Example Usage</strong>
  * <pre>{@code
- *     Digest digest = new SHA256Digest();
- *     byte[] hash = digest.computeDigest(input);
+ * SHA256Digest digest = new SHA256Digest();
+ * digest.computeDigest(data);
+ * byte[] hash = digest.return_and_reset();
  * }</pre>
- * <p>
- * References:
- * <a href="https://tools.ietf.org/html/rfc6234">RFC 6234 - Secure Hash Standard (SHS)</a>
- * <a href="https://en.wikipedia.org/wiki/SHA-2">Wikipedia - SHA-2</a>
- * <a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf">NIST FIPS 180-4 - Secure Hash Standard</a>
+ *
+ * <strong>References</strong>
+ * <ul>
+ *     <li><a href="https://tools.ietf.org/html/rfc6234">RFC 6234 - Secure Hash Standard (SHS)</a></li>
+ *     <li><a href="https://en.wikipedia.org/wiki/SHA-2">Wikipedia - SHA-2</a></li>
+ *     <li><a href="https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf">NIST FIPS 180-4 - Secure Hash Standard</a></li>
+ * </ul>
+ *
+ * <strong>Best Practices</strong>
+ * <ul>
+ *     <li>For one-shot hash operations, consider creating a new instance per call,
+ *     or extending this class with a static convenience method that encapsulates
+ *     the lifecycle of hash and reset operations.</li>
+ *     <li>For long-running or stream-based hash calculations, this stateful design
+ *     allows for incremental processing and finalization when combined with
+ *     a future `update()` method (to be implemented).</li>
+ * </ul>
  *
  * @author Priyak Dey
  */
@@ -87,7 +113,7 @@ public final class SHA256Digest implements Digest {
      * @throws IllegalStateException if an internal buffer misalignment occurs (should not happen under correct input)
      */
     @Override
-    public byte[] computeDigest(byte[] message) {
+    public Digest computeDigest(byte[] message) {
         Objects.requireNonNull(message, "Input message cannot be null");
         int messageLength = message.length;
 
@@ -118,10 +144,30 @@ public final class SHA256Digest implements Digest {
             processBlock(buffer, blockIndex);
         }
 
+        return this;
+    }
+
+    /**
+     * Returns the resulting hash of the most recent digest computation
+     * and resets the internal state to its initial state.
+     *
+     * @return the hash result as a byte array
+     */
+    @Override
+    public byte[] return_and_reset() {
         ByteBuffer digest = new ByteBuffer(DIGEST_SIZE);
         for (int h : hash) {
             digest.append(h, ByteOrder.BIG_ENDIAN);
         }
+
+        hash[0] = 0x6a09e667;
+        hash[1] = 0xbb67ae85;
+        hash[2] = 0x3c6ef372;
+        hash[3] = 0xa54ff53a;
+        hash[4] = 0x510e527f;
+        hash[5] = 0x9b05688c;
+        hash[6] = 0x1f83d9ab;
+        hash[7] = 0x5be0cd19;
 
         return digest.bytes();
     }
@@ -189,3 +235,4 @@ public final class SHA256Digest implements Digest {
     }
 
 }
+
